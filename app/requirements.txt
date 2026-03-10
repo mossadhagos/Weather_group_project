@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+pandas
+kafka-python
+pydantic
+psycopg[binary]
