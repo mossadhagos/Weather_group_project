@@ -11,9 +11,9 @@ services:
       - postgres_data:/var/lib/postgresql
     # Port to be able to use pgAdmin
     ports:
-      -   "5433:5432"
+      -   "5432:5432"
 
-  fastapi:
+  fastapi:  #app
     build: ./app
     ports:
       - "8000:8000"
