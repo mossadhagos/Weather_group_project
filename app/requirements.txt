@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pandas
+kafka-python
+pydantic
+psycopg[binary]
+ipykernel
+databases[postgresql]
+python-dotenv

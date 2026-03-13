@@ -1,0 +1,57 @@
+services:
+
+  postgres:
+    image: postgres:18
+    container_name: history_weather
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    # Port to be able to use pgAdmin
+    ports:
+      -   "5433:5432"
+
+  fastapi:
+    build: ./app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - kafka
+
+
+  # This is already built in to kafka
+
+  #zookeeper:
+  #  image: confluentinc/cp-zookeeper:latest
+  #  environment:
+  #    ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    image: apache/kafka:latest
+    ports:
+      - "9092:9092"
+    #depends_on:
+     # - zookeeper
+    environment:
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_BROKER_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      #KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      CLUSTER_ID: "fjewoEWMOwjo39vSDLD"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+
+volumes:
+  postgres_data:
+  kafka_data:
