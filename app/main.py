@@ -29,19 +29,23 @@ app = FastAPI(lifespan= lifespan)
 
 #
 @app.get("/")
-def root():
+def root() -> dict[str, str]:
     return {"message": "Hello Weather"}
 
 
-@app.get("/all_dates")
-async def all_dates():
+@app.get("/all_weather_data")
+async def all_weather_data() -> dict[str, list[dict[str, float]]]:
     # Get all the dates/rows in database
     query = "SELECT * FROM weather_data ORDER BY date"
     result = await app.state.database.fetch_all(query=query)
 
+    # To see if there is data in db or if something is not working
+    if not result:
+        return {"message": "No data in database"}
+
     # Create a list with dicts (for each row), returns list to user
     return {
-        "all_temperatures": [
+        "all_weather_data": [
             {"date": row["date"], "temperature": row["temperature"]}
             for row in result
         ]
@@ -49,7 +53,8 @@ async def all_dates():
 
 @app.get("/date_temp/{date}")
 # When sending a request, FastAPI extracts date as a str
-async def date_temperature(date: str):
+async def date_temperature(date: str) -> dict[str, str | float]:
+
     # Testing to see if date is in database
     check_query = "SELECT COUNT(*) as count FROM weather_data WHERE date = :date"
     values: dict[str, str]= {"date": date}
@@ -64,5 +69,3 @@ async def date_temperature(date: str):
     result = await app.state.database.fetch_one(query=query, values=values)
 
     return {"date": date, "temperature": result["temperature"]}
-
-
