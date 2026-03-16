@@ -34,7 +34,7 @@ def root() -> dict[str, str]:
 
 
 @app.get("/all_weather_data")
-async def all_weather_data() -> dict[str, list[dict[str, float]]]:
+async def all_weather_data() -> dict[str, list[dict[str, float | str]]]:
     # Get all the dates/rows in database
     query = "SELECT * FROM weather_data ORDER BY date"
     result = await app.state.database.fetch_all(query=query)
