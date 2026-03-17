@@ -9,9 +9,16 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql
+      - ./data:/data
+      - ./sql:/docker-entry-point-initdb.d
     # Port to be able to use pgAdmin
     ports:
       -   "5432:5432"
+    #healthcheck:  # <-- Nytt
+    #test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+    #interval: 5s
+    #timeout: 5s
+    #retries: 5
 
   fastapi:  #app
     build: ./app
@@ -19,11 +26,14 @@ services:
       - "8000:8000"
     volumes:
       - ./app:/app
+      - ./data:/data # I changed this
     env_file:
       - .env
     depends_on:
       - postgres
+        #condition:service_healthy
       - kafka
+
 
 
   # This is already built in to kafka
