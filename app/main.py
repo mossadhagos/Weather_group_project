@@ -7,7 +7,6 @@ from databases import Database
 # --- Get the information in .env-file
 load_dotenv()
 
-# --- Förbereder två olika connections för att se vad som fungerar
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     database_url = f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@postgres:5432/{os.getenv('POSTGRES_DB')}"
@@ -53,6 +52,8 @@ async def all_weather_data(): #-> dict[str, list[dict[str, float | str]]]:  no t
         ]
     }
 
+# Dubble queries created problems when running the code
+
 """
 @app.get("/date_temp/{created_at}")
 #When sending a request, FastAPI extracts date as a str
@@ -79,7 +80,7 @@ async def date_temperature(created_at: str): # -> dict[str, str | float]:  no ty
 # --- Changes need to make it work ---
 @app.get("/date_temp/{created_at}")
 async def date_temperature(created_at: str):
-    query = "SELECT * FROM raw2.chris_table WHERE created_at = :created_at"
+    query = "SELECT * FROM clean2.chris_table2 WHERE created_at = :created_at"
     result = await app.state.database.fetch_one(query=query, values={"created_at": created_at})
 
     if not result:
