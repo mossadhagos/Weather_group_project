@@ -37,7 +37,7 @@ def root() -> dict[str, str]:
 @app.get("/all_weather_data")
 async def all_weather_data(): #-> dict[str, list[dict[str, float | str]]]:  no type hint when trying mockdata
     # Get all the dates/rows in database
-    query = "SELECT * FROM raw2.chris_table ORDER BY created_at"
+    query = "SELECT * FROM clean2.chris_table2 ORDER BY created_at"
     result = await app.state.database.fetch_all(query=query)
 
     # To see if there is data in db or if something is not working
