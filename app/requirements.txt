@@ -3,7 +3,7 @@ uvicorn
 pandas
 kafka-python
 pydantic
-psycopg[binary]
+psycopg[binary,pool]
 ipykernel
 databases[postgresql]
 python-dotenv
