@@ -5,6 +5,7 @@ import os  #Allows reading environment variables like passwords
 from dotenv import load_dotenv #Loads variables from .env file
 from psycopg_pool import ConnectionPool
 import psycopg
+import time
 
 
 from datetime import datetime
@@ -14,21 +15,26 @@ from pydantic import BaseModel, ValidationError, field_validator
 #load enviroment variables from .env file
 load_dotenv()
 
-csv_file = "data/mockup_data.csv"
+csv_file = "/app/data/mockup_data.csv"
 
-def get_connection(): #reuasble connection function
-    """
-    Creates and returns a database connection.
-    """
-    
+def get_connection(retries=10, delay=2):
 
-    conn = psycopg.connect(
-        f"dbname={os.getenv('POSTGRES_DB')} "
-        f"user={os.getenv('POSTGRES_USER')} "
-        f"password={os.getenv('POSTGRES_PASSWORD')} "
-        f"host={os.getenv('POSTGRES_HOST')}"
-    )
-    return conn
+    for i in range(retries):
+        try:
+            conn = psycopg.connect(
+                dbname=os.getenv("POSTGRES_DB"),
+                user=os.getenv("POSTGRES_USER"),
+                password=os.getenv("POSTGRES_PASSWORD"),
+                host=os.getenv("POSTGRES_HOST"),
+                port=os.getenv("POSTGRES_PORT"),
+            )
+            return conn
+
+        except Exception as e:
+            print(f"⏳ DB not ready yet... retry {i+1}")
+            time.sleep(delay)
+
+    raise Exception("❌ Could not connect to database after retries")
 #Data Ingestion (Load Raw Data)
 # Store the CSV exactly as received before any cleaning.
 
@@ -152,13 +158,15 @@ def clean_weather_data(df):
 
 def save_validation_results(df_valid, df_rejected):
 
+    os.makedirs("data/output", exist_ok=True)
+
     df_rejected.to_csv(
-        "data/output/rejected_weather.csv",
+        "app/data/output/rejected_weather.csv",
         index=False
     )
 
     df_valid.to_csv(
-        "data/output/accepted_weather.csv",
+        "app/data/output/accepted_weather.csv",
         index=False
     )
 #Load Clean Data into Database
@@ -204,62 +212,34 @@ def load_clean_data(df_clean):
 
     conn.commit()
     conn.close()
-#Query Data
-#Allow the user to query temperatures for a specific date.
 
-from datetime import datetime
 
-def query_temperature():
 
-    user_input = input("Enter a date (YYYY-MM-DD): ").strip()
 
-    try:
-        input_date = datetime.strptime(user_input, "%Y-%m-%d").date()
-    except ValueError:
-        print("Invalid date format")
-        return
 
-    conn = get_connection()
 
-    query = """
-    SELECT DISTINCT temp
-    FROM clean.weather_clean
-    WHERE DATE(created_at) = %s
-    """
 
-    with conn.cursor() as cur:
-        cur.execute(query, (input_date,))
-        rows = cur.fetchall()
-        colnames = [desc[0] for desc in cur.description]
-
-    conn.close()
-
-    df = pd.DataFrame(rows, columns=colnames)
-
-    if df.empty:
-         print(f"No data found for {input_date}")
-    else:
-         print(f"Data for {input_date}:")
-         print(df)
 #Main Pipeline
-# Finally, run everything in order.
+# Finally, run everything in order."""
 
 if __name__ == "__main__": #It basically means:Only run the code inside this block if this file is being executed directly
                             #name is set to main because the file is in the main program ..
+    try:
 
-    csv_file = "data/mockup_data.csv"
+        csv_file = "data/mockup_data.csv"
 
-    ingest_raw_csv(csv_file)
+        ingest_raw_csv(csv_file)
 
-    df_raw = load_raw_data()
+        df_raw = load_raw_data()
 
-    df_valid, df_rejected = clean_weather_data(df_raw)
+        df_valid, df_rejected = clean_weather_data(df_raw)
 
-    save_validation_results(df_valid, df_rejected)
+        save_validation_results(df_valid, df_rejected)
 
-    load_clean_data(df_valid)
-    
+        load_clean_data(df_valid)
 
-    query_temperature()
+        print(" ETL completed successfully")
 
-    
+    except Exception as e:
+        print(f"ETL failed: {e}")
+        
