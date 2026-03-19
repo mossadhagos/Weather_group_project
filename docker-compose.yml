@@ -14,7 +14,7 @@ services:
       #- ./init-scripts:/docker-entrypoint-initdb.d  
     # Port to be able to use pgAdmin
     ports:
-      -   "5433:5432"  # changed on 18 03 to chekc if query.py works/if not, change pas to 5432:5432
+      -   "5432:5432"  # changed on 18 03 to chekc if query.py works/if not, change pas to 5432:5432
     healthcheck:                                  # ← NEW: waits until Postgres accepts connections
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
@@ -45,7 +45,7 @@ services:
   fastapi:  #app
     build: ./app
     ports:
-      - "8000:8000"
+      - "8080:8000"
     volumes:
       - ./app:/app
     env_file:
