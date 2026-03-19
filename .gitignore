@@ -1,3 +1,8 @@
+# own stuff
+data_c/
+
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -206,3 +211,18 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+/docs
+
+
+/init-scripts
+
+/tests_scripts
+
+1rst_demo_thursday_notes.md
+auto_run_script.sh
+dennis_code.ipynb
+draft.ipynb
+ingestion_auto.py
+query.py
+Transformation_Conditions_final.pdf
