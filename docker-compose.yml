@@ -1,17 +1,30 @@
 services:
 
   postgres:
-    image: postgres:18
+    image: postgres:17.4
     container_name: history_weather
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - postgres_data:/var/lib/postgresql
+      #- postgres_data:/var/lib/postgresql
+      - postgres_data:/var/lib/postgresql/data
+      - ./data:/data
+      - ./sql:/docker-entry-point-initdb.d 
     # Port to be able to use pgAdmin
     ports:
       -   "5432:5432"
+
+
+  etl:
+    build: ./app
+    container_name: etl_runner
+    command: python pipeline.py
+    env_file:
+      - .env
+    depends_on:
+      - postgres
 
   fastapi:  #app
     build: ./app
@@ -19,6 +32,7 @@ services:
       - "8000:8000"
     volumes:
       - ./app:/app
+      - ./data:/app/data
     env_file:
       - .env
     depends_on:
