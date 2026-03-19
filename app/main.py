@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from databases import Database
+from datetime import date
 
 # --- Get the information in .env-file
 load_dotenv()
@@ -52,41 +53,3 @@ async def all_weather_data(): #-> dict[str, list[dict[str, float | str]]]:  no t
         ]
     }
 
-# Dubble queries created problems when running the code
-
-"""
-@app.get("/date_temp/{created_at}")
-#When sending a request, FastAPI extracts date as a str
-async def date_temperature(created_at: str): # -> dict[str, str | float]:  no type hint when trying mockdata
-
-    # Testing to see if date is in database
-    check_query = "SELECT COUNT() as count FROM raw2.chris_table WHERE created_at = :created_at"
-    values: dict[str, str]= {"created_at": created_at}
-
-    count_result = await app.state.database.fetch_one(query=check_query, values=values)
-    # If date not in database, return message
-    if count_result["count"] == 0:
-        return {"message": f"Date {created_at} does not exist in database"}
-
-    # If date is in database, return date and temperature
-    query = "SELECT FROM raw2.chris_table WHERE created_at = :created_at"
-    result = await app.state.database.fetch_one(query=query, values=values)
-
-    return {
-        "created_at": str(result["created_at"]) if result["created_at"] is not None else None, 
-        "temperature": str(result["temp"]) if result["temp"] is not None else None
-    }
-"""
-# --- Changes need to make it work ---
-@app.get("/date_temp/{created_at}")
-async def date_temperature(created_at: str):
-    query = "SELECT * FROM clean2.chris_table2 WHERE created_at = :created_at"
-    result = await app.state.database.fetch_one(query=query, values={"created_at": created_at})
-
-    if not result:
-        return {"message": f"Date {created_at} does not exist"}
-
-    return {
-        "created_at": result["created_at"],
-        "temperature": result["temp"]
-    }
