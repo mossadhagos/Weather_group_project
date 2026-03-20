@@ -13,7 +13,7 @@ This guide explains how to:
 2. **Create and run the container** (including the PostgreSQL database) with: <br>
 docker compose up
 
-<ing src="2.docker_compose_up.png" width=500>
+<img src="2.docker_compose_up.png" width=500>
 
 3. **Open an interactive terminal** (with -it) inside the container "history_weather": <br>
 docker exec -it history_weather bash
@@ -61,4 +61,3 @@ psql -U postgres -d history_weather
 10. **Query the table** to check that the data was successfully ingested:<br>
 SELECT * FROM raw2.chris_table LIMIT 20;
 
-<img src="10" width=500>
