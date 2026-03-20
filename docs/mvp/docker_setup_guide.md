@@ -28,7 +28,7 @@ ls
 5. **Go into the relevant folder**, here docker-entrypoint-initdb.d/ by doing:<br> 
 cd docker-entrypoint-initdb.d/
 
-<img src="5.step" width=500>
+<img src="5.step.png" width=500>
 
 6. *Check that the init.sql file* (initialization) is there:<br> 
 ls
@@ -46,7 +46,7 @@ psql -U postgres -d history_weather
 - the dbs by doing: \l
 
 <img src="schemas.png" width=500>
-<img src="dbs" width=500>
+<img src="dbs.png" width=500>
 
 8. **Connect to the database** "history_weather":<br>
 \c history_weather
