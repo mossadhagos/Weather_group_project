@@ -108,6 +108,8 @@ convert data types and format
 flag suspicious values/extreme temp and missing dates
 reject impossible/invalid values 
 separate valid / rejected rows
+rename columns 
+drop precipitation column
 """
 
 def clean_weather_data(df):
