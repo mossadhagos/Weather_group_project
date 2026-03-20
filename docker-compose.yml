@@ -11,8 +11,6 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./data:/data                    # local only, gitignored + TO BE REMOVED BEFORE COMMIT + SAME BELOW
       - ./sql:/docker-entrypoint-initdb.d  # local only, gitignored - Postgres automatically runs any .sql file placed in that folder on startup
-      #- ./init-scripts:/docker-entrypoint-initdb.d  
-    # Port to be able to use pgAdmin
     ports:
       -   "5433:5432"  # changed on 18 03 to chekc if query.py works/if not, change pas to 5432:5432
     healthcheck:                                  # ← NEW: waits until Postgres accepts connections
@@ -21,16 +19,6 @@ services:
       timeout: 5s
       retries: 5
 
-    #init:
-    #image: postgres:17
-    #depends_on:
-    #  - postgres
-    #env_file: .env
-    #volumes:
-    #  - ./auto_run_script.sh:/auto_run_script.sh 
-    #  - ./sql:/init-scripts
-      #- ./init-scripts:/init-scripts
-    #entrypoint: ["bash", "/auto_run_script.sh"]
 
   etl:
     build: ./etl                        # folder containing your script + Dockerfile
@@ -53,33 +41,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      kafka: 
-        condition: service_started
 
-
-  # This is already built in to kafka
-
-  #zookeeper:
-  #  image: confluentinc/cp-zookeeper:latest
-  #  environment:
-  #    ZOOKEEPER_CLIENT_PORT: 2181
-
-  kafka:
-    image: apache/kafka:latest
-    ports:
-      - "9092:9092"
-    #depends_on:
-     # - zookeeper
-    environment:
-      KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_BROKER_ID: 1
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
-      #KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      CLUSTER_ID: "fjewoEWMOwjo39vSDLD"
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    volumes:
-     - kafka_data:/var/lib/kafka/data
 
   pgadmin:
     image: dpage/pgadmin4
@@ -97,4 +59,3 @@ services:
 
 volumes:
   postgres_data:
-  kafka_data:

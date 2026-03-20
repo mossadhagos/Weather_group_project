@@ -4,8 +4,7 @@
     <list default="true" id="c2447739-1388-43a0-87f6-a3af3eb9c0a4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/output/accepted_weather.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/output/accepted_weather.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/output/rejected_weather.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/output/rejected_weather.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +79,8 @@
       <workItem from="1773649764736" duration="16436000" />
       <workItem from="1773807222134" duration="4837000" />
       <workItem from="1773848298255" duration="2130000" />
-      <workItem from="1773905354187" duration="1384000" />
+      <workItem from="1773905354187" duration="4206000" />
+      <workItem from="1773993908405" duration="6600000" />
     </task>
     <servers />
   </component>
