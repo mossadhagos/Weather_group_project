@@ -6,5 +6,10 @@ created_at,temp,flag_invalid_date,flag_invalid_temp,flag_extreme_temp,flag_inval
 2000-01-03,1.6,False,False,False,False
 2000-01-05,12.0,False,False,False,False
 2000-01-07,-0.0,False,False,False,False
+2000-02-09,-1.0,False,False,False,False
+2000-03-08,1.0,False,False,False,False
+2000-04-10,5.0,False,False,False,False
+2000-05-13,4.0,False,False,False,False
+2000-06-01,14.0,False,False,False,False
 2010-06-01,10.0,False,False,False,False
 2010-06-02,-3.0,False,False,False,False

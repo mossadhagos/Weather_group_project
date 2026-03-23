@@ -174,9 +174,9 @@ async def yearly_average_temperature(year: int = Path(..., description="Enter ye
 #Parameter is a string
 @app.get("/chart/same_day_all_years/{chosen_date}")
 async def chart_same_day_all_years(
-    chosen_date: str = Path(..., description="Date in YYYY-MM-DD format")):
+    chosen_date: str = Path(..., description="Date in MM-DD format")):
 
-    parsed_date = datetime.strptime(chosen_date, "%Y-%m-%d").date() # Does not work without parsing/breaking the string
+    parsed_date = datetime.strptime(chosen_date, "%m-%d").date() # Does not work without parsing/breaking the string
     month = parsed_date.month
     day = parsed_date.day
 
@@ -209,7 +209,7 @@ async def chart_same_day_all_years(
     plt.tight_layout()
 
 #Save the chart to an in-memory buffer
-    buf = io.BytesIO()  # create an empty binär file in the RAM
+    buf = io.BytesIO()  # create an empty binary file in the RAM
     plt.savefig(buf, format="png", dpi=110, bbox_inches='tight') # writing the png image in the empty file
     buf.seek(0) # read the file
     plt.close(fig)
@@ -224,5 +224,101 @@ async def chart_same_day_all_years(
       # filename: suggest a way to name the file if saved like temp_01-15_years.png
       # 02d is a format for Feb = 02
 
+
+#Monthly average temperatures across years
+@app.get("/chart/same_month_all_years/{chosen_month}")
+async def chart_same_month_all_years(chosen_month: str = Path(..., description="Enter in MM format")):
+
+    parsed_month = datetime.strptime(chosen_month, "%m").date()
+    month = parsed_month.month
+
+    query = """ 
+        SELECT EXTRACT(YEAR FROM created_at) AS year, 
+        ROUND(AVG(temp)::numeric, 1) as avg_temp
+        FROM clean2.chris_table2
+        WHERE EXTRACT (MONTH from created_at)  = :month
+        GROUP BY EXTRACT (YEAR from created_at)
+        ORDER BY year
+        """
+
+    rows = await app.state.database.fetch_all(query=query, values={"month": month})
+
+    if not rows:
+        return {"message": f"no data, sorry!"}
+
+    years = [int(r["year"]) for r in rows]
+    avg_temp = [round(float(r["avg_temp"]), 2) for r in rows]  # changed from temp to avg_temp + rounded
+
+    # chart
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.plot(years, avg_temp, marker='o', linestyle='-', color='teal', linewidth=2)
+    ax.set_title(f"Average Temperature on {parsed_month.strftime('%B')} Across Years")
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Average Temperature (°C)")
+    ax.grid(True, linestyle='--', alpha=0.7)
+    plt.xticks(years, rotation=45)
+    plt.tight_layout()
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format="png", dpi=110, bbox_inches='tight')
+    buf.seek(0)
+    plt.close(fig)
+
+    return StreamingResponse(buf, media_type="image/png")
+
+
+# Linechart: Average temperature for every month, specific year
+@app.get("/chart/all_months_avg/{chosen_year}")
+async def all_months_avg(
+    chosen_year: str = Path(..., description="Year in YYYY format")):
+
+    year = int(chosen_year)
+
+    # To include all dates for a whole year (Jan 1 to Dec 31)
+    start_date = date(year, 1, 1)
+    end_date = date(year, 12, 31)
+
+    # Calculate monthly average temperatures for the specified year
+    query = """ 
+    SELECT 
+        EXTRACT(MONTH FROM created_at) as month,
+        ROUND(AVG(temp)::numeric, 1) as avg_temp,
+        COUNT(*) as measurement_count 
+    FROM clean2.chris_table2
+    WHERE created_at BETWEEN :start_date AND :end_date
+    GROUP BY EXTRACT(MONTH FROM created_at)
+    ORDER BY month
+    """
+    rows = await app.state.database.fetch_all(query=query, values={"start_date": start_date, "end_date": end_date})
+
+    if not rows:
+        return {"message": f"no data, sorry!"}
+
+    #Extracting month and average temp into separate lists for plotting
+    months = [r["month"] for r in rows]
+    avg_temps = [float(r["avg_temp"]) for r in rows]
+
+    #chart
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.plot(months, avg_temps, marker='o', linestyle='-', color='teal', linewidth=2)
+    ax.set_title(f"Average Temperature all Months, Year {chosen_year}")   # converts a date into a readable string
+    ax.set_xlabel("Months")
+    ax.set_ylabel("Temperature (°C)")
+    ax.grid(True, linestyle='--', alpha=0.7)
+    plt.xticks(months, rotation=45)
+    plt.tight_layout()
+
+    #Save the chart to an in-memory buffer
+    buf = io.BytesIO()  # create an empty binary file in the RAM
+    plt.savefig(buf, format="png", dpi=110, bbox_inches='tight') # writing the png image in the empty file
+    buf.seek(0) # read the file
+    plt.close(fig)
+
+    #Streaming the image directly in the endpoint
+    return StreamingResponse(
+     buf,   # Reads from the buffer and sends it to the browser
+     media_type="image/png",
+     headers={"Content-Disposition": f"inline; filename=temp_{chosen_year}_all_months.png"}
+    )
 
 
