@@ -1,10 +1,13 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Path
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from databases import Database
-from datetime import date
+from datetime import date, datetime
 from typing import Union
+import matplotlib.pyplot as plt
+import io
+from fastapi.responses import StreamingResponse
 
 # Get the information from .env-file
 load_dotenv()
@@ -72,3 +75,154 @@ async def date_temperature(created_at: date) -> dict[str, Union[date, float]]:
         "created_at": result["created_at"],
         "temperature": result["temp"]
     }
+
+# Same day for all the years ---
+@app.get("/same_day_all_years/{created_at}")
+async def same_day_all_years(created_at: date = Path(...,description="Enter a date in YYYY-MM-DD format")):
+# Query rows matching the same month and day for all the years ---
+    query = """
+    SELECT created_at, temp
+    FROM clean2.chris_table2
+    WHERE EXTRACT(MONTH FROM created_at) = :month
+    AND EXTRACT(DAY FROM created_at) = :day
+    ORDER BY created_at
+    """
+# Extract month and day from the input date ---
+    result = await app.state.database.fetch_all(
+        query=query, values={"month": created_at.month, "day": created_at.day}
+    )
+
+    if not result:
+        return {"message": "No data, sorry!"}
+
+# Return the day and one entry per year
+    return {
+        "created_at": created_at.strftime("%B %d"),
+        "view": [
+            {"year": row["created_at"].year, "temp": row["temp"]}
+            for row in result
+        ]
+    }
+
+
+# Average temp for a give month (1 to 12) for all the years
+@app.get("/monthly_average_all_years/{month}")
+async def monthly_average_all_years(month: int = Path(..., description="Enter a number for the month from 1 to 12")):
+# Validation of the months'number
+    if month < 1 or month > 12:
+        return {"Message": "Month numbers go from 1 to 12"}
+
+# Average temp per year for the chosen month | ""::numeric, 1" converts the result into a numeric as Postgres only accepts ROUND for numeric type
+    query = """
+    SELECT 
+        EXTRACT(YEAR FROM created_at) as year,
+        ROUND(AVG(temp)::numeric, 1) as avg_temp 
+    FROM clean2.chris_table2
+    WHERE EXTRACT(MONTH FROM created_at) = :month
+    GROUP BY year
+    ORDER BY year
+    """
+    result = await app.state.database.fetch_all(
+        query=query, values={"month": month}
+    )
+
+    if not result:
+        return {"Message": f"No data for month {month}"}
+
+# Calculate the overall average for the month for all years
+    overall = round(sum(r["avg_temp"] for r in result) / len(result), 1)
+
+# Return the overall averages and split them by year ---
+    return {
+        "month": month,
+        "overall_average": overall,
+        "by_year": [
+            {"year": int(row["year"]), "avg_temp": float(row["avg_temp"])}
+            for row in result
+        ]
+    }
+
+
+@app.get("/yearly_average_temperature/{year}")
+async def yearly_average_temperature(year: int = Path(..., description="Enter year as YYYY")):
+# Average temp for all days in the chosen year
+    query = """
+    SELECT
+    EXTRACT (YEAR from created_at) as year,
+    ROUND(AVG(temp)::numeric, 1) as avg_temp
+    FROM clean2.chris_table2
+    WHERE EXTRACT (YEAR from created_at) = :year
+    GROUP BY year
+    ORDER BY year
+    """
+# Here we fetch single row as we filter by/for one year
+    result = await app.state.database.fetch_one(
+        query=query, values={"year": year}
+    )
+
+    if not result:
+        return {"Message": f"No data for year {year}"}
+
+# Return the year and its average temp
+    return {
+        "year": int(result["year"]),
+        "avg_temp": float(result["avg_temp"])
+        }
+
+
+#Line chart: Temperature on the same day across years
+#Parameter is a string
+@app.get("/chart/same_day_all_years/{chosen_date}")
+async def chart_same_day_all_years(
+    chosen_date: str = Path(..., description="Date in YYYY-MM-DD format")):
+
+    parsed_date = datetime.strptime(chosen_date, "%Y-%m-%d").date() # Does not work without parsing/breaking the string
+    month = parsed_date.month
+    day = parsed_date.day
+
+
+#Fetching all rows matching the chosen date (month and day) whatever the year
+    query = """ 
+    SELECT created_at, temp
+    FROM clean2.chris_table2
+    WHERE EXTRACT (MONTH FROM created_at)  = :month
+    AND EXTRACT (DAY FROM created_at) = :day
+    ORDER BY created_at
+    """
+    rows = await app.state.database.fetch_all(query=query, values={"month": month, "day": day})
+
+    if not rows:
+        return {"message": f"no data, sorry!"}
+
+#Extracting years and temp into separate lists for plotting
+    years = [r["created_at"].year for r in rows]
+    temp = [float(r["temp"]) for r in rows]
+
+#chart
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.plot(years, temp, marker='o', linestyle='-', color='teal', linewidth=2)
+    ax.set_title(f"Temperature on {parsed_date.strftime('%B %d')} Across Years")   # converts a date into a readable string
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Temperature (°C)")
+    ax.grid(True, linestyle='--', alpha=0.7)
+    plt.xticks(years, rotation=45)
+    plt.tight_layout()
+
+#Save the chart to an in-memory buffer
+    buf = io.BytesIO()  # create an empty binär file in the RAM
+    plt.savefig(buf, format="png", dpi=110, bbox_inches='tight') # writing the png image in the empty file
+    buf.seek(0) # read the file
+    plt.close(fig)
+
+#Streaming the image directly in the endpoint
+    return StreamingResponse(
+     buf,   # Reads from the buffer and sends it to the browser
+     media_type="image/png",
+     headers={"Content-Disposition": f"inline; filename=temp{month:02d}-{day:02d}_years.png"}
+    ) # Content-dips: above line says to browser how to handle the file
+      # inline: display the image in the browser
+      # filename: suggest a way to name the file if saved like temp_01-15_years.png
+      # 02d is a format for Feb = 02
+
+
+
