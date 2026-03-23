@@ -81,7 +81,7 @@
  - Route - The mapping between a URL and a function, In FastAPI; @app.get("/weather")
 
  - HTTP Methods
-    ```
+    
     |Method |Purpose|
     |-------|-------|
     |GET	|Retrieve data|
@@ -89,7 +89,7 @@
     |PUT	|Update|
     |DELETE	|Remove|
 
-    ```
+    
 
     ---
  - Request - Data sent by the client
