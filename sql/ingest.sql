@@ -13,3 +13,25 @@ CREATE TABLE raw.stockholm_raw (
 COPY raw.stockholm_raw(line)
 FROM '/data/raw_stockholm.csv'
 WITH (FORMAT text);
+
+
+--- for cleaned data 
+-- Create schema
+CREATE SCHEMA IF NOT EXISTS clean;
+
+-- Create table
+CREATE TABLE IF NOT EXISTS clean.weather (
+    id SERIAL PRIMARY KEY,
+    created_at DATE,
+    temp FLOAT,
+    UNIQUE(created_at, temp)
+);
+
+-- Optional: clear table before reload
+TRUNCATE clean.weather;
+
+-- Load cleaned CSV
+
+COPY clean.weather (created_at, temp)
+FROM '/data/output/accepted_weather.csv'
+WITH (FORMAT csv, HEADER true);
