@@ -282,7 +282,7 @@ async def all_months_avg(
     query = """ 
     SELECT 
         EXTRACT(MONTH FROM created_at) as month,
-        ROUND(AVG(temp)::numeric, 1) as avg_temp,
+        ROUND(AVG(temp)::numeric, 2) as avg_temp,
         COUNT(*) as measurement_count 
     FROM clean2.chris_table2
     WHERE created_at BETWEEN :start_date AND :end_date
@@ -322,3 +322,39 @@ async def all_months_avg(
     )
 
 
+@app.get("/chart/avg_temp_all_years")
+async def avg_temp_all_years():
+
+
+    query = """ 
+        SELECT EXTRACT(YEAR FROM created_at) AS year, 
+        ROUND(AVG(temp)::numeric, 1) as avg_temp
+        FROM clean2.chris_table2
+        GROUP BY EXTRACT (YEAR from created_at)
+        ORDER BY year
+        """
+
+    rows = await app.state.database.fetch_all(query=query)
+
+    if not rows:
+        return {"message": f"no data, sorry!"}
+
+    years = [int(r["year"]) for r in rows]
+    avg_temp = [round(float(r["avg_temp"]), 2) for r in rows]  # changed from temp to avg_temp + rounded
+
+    # chart
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.plot(years, avg_temp, marker='o', linestyle='-', color='teal', linewidth=2)
+    ax.set_title(f"Average Temperature for all Years in Database")
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Average Temperature (°C)")
+    ax.grid(True, linestyle='--', alpha=0.7)
+    plt.xticks(years, rotation=45)
+    plt.tight_layout()
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format="png", dpi=110, bbox_inches='tight')
+    buf.seek(0)
+    plt.close(fig)
+
+    return StreamingResponse(buf, media_type="image/png")
