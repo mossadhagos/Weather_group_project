@@ -64,3 +64,59 @@
  - pd.to\_datetime() – Converts a column to datetime objects.
 
  - pd.to\_numeric() – Converts a column to numeric type (int/float).
+
+ ---
+
+ ## API → FastAPI(Fundamentals)
+ - API  - (Application Programming Interface):A way for software systems to communicate.
+
+ - Your API will expose:weather data, pipeline results
+
+ - Client - The system requesting data, Examples:browser, frontend app, another service
+
+ - Server - The system responding to requests, Your FastAPI app + PostgreSQL
+
+ - Endpoint - A specific URL that performs an action, A specific URL that performs an action;/weather
+
+ - Route - The mapping between a URL and a function, In FastAPI; @app.get("/weather")
+
+ - HTTP Methods
+    ```
+    |Method |Purpose|
+    |-------|-------|
+    |GET	|Retrieve data|
+    |POST	|Send data|
+    |PUT	|Update|
+    |DELETE	|Remove|
+
+    ```
+
+    ---
+ - Request - Data sent by the client
+ - Response - Data returned by the server, Usually JSON
+ - JSON (JavaScript Object Notation) - Standard data format for APIs
+ - Query Parameters - Filters in a URL
+ - FastAPI - A Python framework for building APIs quickly and efficiently
+ - App Instance - Main API object
+ - Path Operation - A function tied to an endpoint
+ - Response Model - Data sent in POST requests
+ - Automatic Docs (Swagger UI) - FastAPI auto-generates documentation
+ - Async / Await - Non-blocking execution (FastAPI supports this)
+ - Pipeline + API Integration - Data Pipeline Trigger/ Running ETL from an API
+ - Idempotency - Running the same request multiple times gives same result
+
+    ---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
