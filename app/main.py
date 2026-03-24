@@ -59,9 +59,9 @@ async def all_weather_data()-> Union[dict[str, str], dict[str, list[dict[str, da
         ]
     }
 
-
+####FELMEDDELANDE
 @app.get("/date_temp/{created_at}")
-async def date_temperature(created_at: date) -> dict[str, Union[date, float]]:
+async def date_temperature(created_at: date) -> dict[str, Union[date, float, str]]:
     # Get the row with requested date
     query = "SELECT * FROM clean.weather WHERE created_at = :created_at"
     result = await app.state.database.fetch_one(query=query, values={"created_at": created_at})
@@ -108,7 +108,7 @@ async def same_day_all_years(created_at: date = Path(...,description="Enter a da
 # Average temp for a give month (1 to 12) for all the years
 @app.get("/monthly_average_all_years/{month}")
 async def monthly_average_all_years(month: int = Path(..., description="Enter a number for the month from 1 to 12")):
-# Validation of the months'number
+# Validation of the months' number
     if month < 1 or month > 12:
         return {"Message": "Month numbers go from 1 to 12"}
 
@@ -347,7 +347,7 @@ async def avg_temp_all_years():
     fig, ax = plt.subplots(figsize=(9, 5))
     ax.plot(years, avg_temp, marker='o', linestyle='-', color='teal', linewidth=2)
     ax.set_title(f"Average Temperature for all Years in Database")
-    ax.set_xlabel("Year")
+    ax.set_xlabel("Years 1961 to 2025")
     ax.set_ylabel("Average Temperature (°C)")
     ax.grid(True, linestyle='--', alpha=0.7)
     plt.xticks(years, rotation=45)
