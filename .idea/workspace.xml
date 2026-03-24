@@ -2,27 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c2447739-1388-43a0-87f6-a3af3eb9c0a4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/weather_pipeline.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/mockup_data_dennis.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/raw_stockholm.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/api_docs.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/glossary.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/sprint.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/etl.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/ingest.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_pipeline.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_weather_pipeline.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weather.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/weather_data_etl_API_endpoint.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env.exampl" beforeDir="false" afterPath="$PROJECT_DIR$/.env.exampl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/output/accepted_weather.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/output/accepted_weather.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/output/rejected_weather.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/output/rejected_weather.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/etl.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/etl/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/etl/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/etl/dennis_code2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/etl/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/init.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_pipeline.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_weather_pipeline.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/weather.ipynb" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +58,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "ai.playground.ignore.import.keys.banner.in.settings": "true",
-    "git-widget-placeholder": "Merging test__code",
+    "git-widget-placeholder": "test__code",
     "last_opened_file_path": "C:/Users/anjag/Documents/github/data-plattformar/Weather_group_project",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "preferences.keymap",
@@ -100,7 +91,7 @@
       <workItem from="1773905354187" duration="4206000" />
       <workItem from="1773993908405" duration="12599000" />
       <workItem from="1774252896057" duration="12985000" />
-      <workItem from="1774336699577" duration="4187000" />
+      <workItem from="1774336699577" duration="5707000" />
     </task>
     <servers />
   </component>
