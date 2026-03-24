@@ -114,11 +114,11 @@ async def monthly_average_all_years(month: int = Path(..., description="Enter a 
 
 # Average temp per year for the chosen month | ""::numeric, 1" converts the result into a numeric as Postgres only accepts ROUND for numeric type
     query = """
-    SELECT 
+    SELECT
         EXTRACT(YEAR FROM created_at) as year,
-        ROUND(AVG(temp)::numeric, 1) as avg_temp 
+        ROUND(AVG(temp)::numeric, 1) as avg_temp
     FROM clean.weather
-    WHERE EXTRACT(MONTH FROM created_at) = :month
+    WHERE EXTRACT(MONTH FROM created_at) = :month AND EXTRACT (YEAR FROM created_at) < 2026
     GROUP BY year
     ORDER BY year
     """
@@ -151,7 +151,7 @@ async def yearly_average_temperature(year: int = Path(..., description="Enter ye
     EXTRACT (YEAR from created_at) as year,
     ROUND(AVG(temp)::numeric, 1) as avg_temp
     FROM clean.weather
-    WHERE EXTRACT (YEAR from created_at) = :year
+    WHERE EXTRACT (YEAR from created_at) = :year AND EXTRACT (YEAR FROM created_at) < 2026
     GROUP BY year
     ORDER BY year
     """
@@ -182,7 +182,7 @@ async def chart_same_day_all_years(
 
 
 #Fetching all rows matching the chosen date (month and day) whatever the year
-    query = """ 
+    query = """
     SELECT created_at, temp
     FROM clean.weather
     WHERE EXTRACT (MONTH FROM created_at)  = :month
@@ -232,11 +232,11 @@ async def chart_same_month_all_years(chosen_month: str = Path(..., description="
     parsed_month = datetime.strptime(chosen_month, "%m").date()
     month = parsed_month.month
 
-    query = """ 
-        SELECT EXTRACT(YEAR FROM created_at) AS year, 
+    query = """
+        SELECT EXTRACT(YEAR FROM created_at) AS year,
         ROUND(AVG(temp)::numeric, 1) as avg_temp
         FROM clean.weather
-        WHERE EXTRACT (MONTH from created_at)  = :month
+        WHERE EXTRACT (MONTH from created_at)  = :month AND EXTRACT (YEAR FROM created_at) < 2026
         GROUP BY EXTRACT (YEAR from created_at)
         ORDER BY year
         """
@@ -279,13 +279,13 @@ async def all_months_avg(
     end_date = date(year, 12, 31)
 
     # Calculate monthly average temperatures for the specified year
-    query = """ 
-    SELECT 
+    query = """
+    SELECT
         EXTRACT(MONTH FROM created_at) as month,
         ROUND(AVG(temp)::numeric, 2) as avg_temp,
-        COUNT(*) as measurement_count 
+        COUNT(*) as measurement_count
     FROM clean.weather
-    WHERE created_at BETWEEN :start_date AND :end_date
+    WHERE created_at BETWEEN :start_date AND :end_date AND EXTRACT (YEAR FROM created_at) < 2026
     GROUP BY EXTRACT(MONTH FROM created_at)
     ORDER BY month
     """
@@ -326,10 +326,11 @@ async def all_months_avg(
 async def avg_temp_all_years():
 
 
-    query = """ 
-        SELECT EXTRACT(YEAR FROM created_at) AS year, 
+    query = """
+        SELECT EXTRACT(YEAR FROM created_at) AS year,
         ROUND(AVG(temp)::numeric, 1) as avg_temp
         FROM clean.weather
+        WHERE EXTRACT (YEAR FROM created_at) < 2026
         GROUP BY EXTRACT (YEAR from created_at)
         ORDER BY year
         """
