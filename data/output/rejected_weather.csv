@@ -1,12 +1,1 @@
-created_at,temp,flag_invalid_date,flag_invalid_temp,flag_extreme_temp,flag_invalid_timestamp
-,15.0,True,False,False,False
-,13.0,True,False,False,False
-,11.0,True,False,False,False
-,3.0,True,False,False,False
-2050-01-01,1.0,False,False,False,True
-,5.0,True,False,False,False
-,1.0,True,False,False,False
-,,True,True,False,False
-2000-01-01,,False,True,False,False
-2000-01-04,110.0,False,False,True,False
-2000-01-06,,False,True,False,False
+created_at,temp,flag_invalid_date,flag_invalid_temp,flag_extreme_temp,flag_future_date,reject_reason

@@ -2,8 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c2447739-1388-43a0-87f6-a3af3eb9c0a4" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/weather_pipeline.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/mockup_data_dennis.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/raw_stockholm.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/api_docs.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/glossary.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/sprint.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/etl.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/ingest.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_pipeline.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_weather_pipeline.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/weather.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/weather_data_etl_API_endpoint.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Dockerfile" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/output/accepted_weather.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/output/accepted_weather.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/output/rejected_weather.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/output/rejected_weather.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,21 +59,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;ai.playground.ignore.import.keys.banner.in.settings&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;test__code&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/anjag/Documents/github/data-plattformar/Weather_group_project&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "ai.playground.ignore.import.keys.banner.in.settings": "true",
+    "git-widget-placeholder": "Merging test__code",
+    "last_opened_file_path": "C:/Users/anjag/Documents/github/data-plattformar/Weather_group_project",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -80,7 +99,8 @@
       <workItem from="1773848298255" duration="2130000" />
       <workItem from="1773905354187" duration="4206000" />
       <workItem from="1773993908405" duration="12599000" />
-      <workItem from="1774252896057" duration="9878000" />
+      <workItem from="1774252896057" duration="12985000" />
+      <workItem from="1774336699577" duration="4187000" />
     </task>
     <servers />
   </component>

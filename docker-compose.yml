@@ -21,7 +21,9 @@ services:
 
 
   etl:
-    build: ./etl                        # folder containing your script + Dockerfile
+    build: ./app                        # folder containing your script + Dockerfile
+    container_name: etl_runner
+    command: python weather_pipeline.py
     env_file: .env
     volumes:
       - ./data:/app/data                # mounts mockup_data.csv + output folder
@@ -36,6 +38,7 @@ services:
       - "8000:8000"
     volumes:
       - ./app:/app
+      - ./data:/app/data
     env_file:
       - .env
     depends_on:

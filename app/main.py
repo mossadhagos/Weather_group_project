@@ -43,7 +43,7 @@ def root() -> dict[str, str]:
 @app.get("/all_weather_data")
 async def all_weather_data()-> Union[dict[str, str], dict[str, list[dict[str, date | float]]]]:
     # Get all the rows in the table (in database)
-    query = "SELECT * FROM clean2.chris_table2 ORDER BY created_at"
+    query = "SELECT * FROM clean.weather ORDER BY created_at"
     # await -> pauses, lets other requests run, go when databas has responded (possible by async)
     result = await app.state.database.fetch_all(query=query)
 
@@ -63,7 +63,7 @@ async def all_weather_data()-> Union[dict[str, str], dict[str, list[dict[str, da
 @app.get("/date_temp/{created_at}")
 async def date_temperature(created_at: date) -> dict[str, Union[date, float]]:
     # Get the row with requested date
-    query = "SELECT * FROM clean2.chris_table2 WHERE created_at = :created_at"
+    query = "SELECT * FROM clean.weather WHERE created_at = :created_at"
     result = await app.state.database.fetch_one(query=query, values={"created_at": created_at})
 
     # If date does not exist in db, sends message
@@ -82,7 +82,7 @@ async def same_day_all_years(created_at: date = Path(...,description="Enter a da
 # Query rows matching the same month and day for all the years ---
     query = """
     SELECT created_at, temp
-    FROM clean2.chris_table2
+    FROM clean.weather
     WHERE EXTRACT(MONTH FROM created_at) = :month
     AND EXTRACT(DAY FROM created_at) = :day
     ORDER BY created_at
@@ -117,7 +117,7 @@ async def monthly_average_all_years(month: int = Path(..., description="Enter a 
     SELECT 
         EXTRACT(YEAR FROM created_at) as year,
         ROUND(AVG(temp)::numeric, 1) as avg_temp 
-    FROM clean2.chris_table2
+    FROM clean.weather
     WHERE EXTRACT(MONTH FROM created_at) = :month
     GROUP BY year
     ORDER BY year
@@ -150,7 +150,7 @@ async def yearly_average_temperature(year: int = Path(..., description="Enter ye
     SELECT
     EXTRACT (YEAR from created_at) as year,
     ROUND(AVG(temp)::numeric, 1) as avg_temp
-    FROM clean2.chris_table2
+    FROM clean.weather
     WHERE EXTRACT (YEAR from created_at) = :year
     GROUP BY year
     ORDER BY year
@@ -184,7 +184,7 @@ async def chart_same_day_all_years(
 #Fetching all rows matching the chosen date (month and day) whatever the year
     query = """ 
     SELECT created_at, temp
-    FROM clean2.chris_table2
+    FROM clean.weather
     WHERE EXTRACT (MONTH FROM created_at)  = :month
     AND EXTRACT (DAY FROM created_at) = :day
     ORDER BY created_at
@@ -235,7 +235,7 @@ async def chart_same_month_all_years(chosen_month: str = Path(..., description="
     query = """ 
         SELECT EXTRACT(YEAR FROM created_at) AS year, 
         ROUND(AVG(temp)::numeric, 1) as avg_temp
-        FROM clean2.chris_table2
+        FROM clean.weather
         WHERE EXTRACT (MONTH from created_at)  = :month
         GROUP BY EXTRACT (YEAR from created_at)
         ORDER BY year
@@ -284,7 +284,7 @@ async def all_months_avg(
         EXTRACT(MONTH FROM created_at) as month,
         ROUND(AVG(temp)::numeric, 2) as avg_temp,
         COUNT(*) as measurement_count 
-    FROM clean2.chris_table2
+    FROM clean.weather
     WHERE created_at BETWEEN :start_date AND :end_date
     GROUP BY EXTRACT(MONTH FROM created_at)
     ORDER BY month
@@ -329,7 +329,7 @@ async def avg_temp_all_years():
     query = """ 
         SELECT EXTRACT(YEAR FROM created_at) AS year, 
         ROUND(AVG(temp)::numeric, 1) as avg_temp
-        FROM clean2.chris_table2
+        FROM clean.weather
         GROUP BY EXTRACT (YEAR from created_at)
         ORDER BY year
         """
