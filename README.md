@@ -78,7 +78,7 @@ project/
 
 ### 1. Extract
 - Read CSV file
-- Store raw data in `raw2.chris_table` schema
+- Store raw data in `clean.weather` schema
 
 ### 2. Transform
 - Convert data types
