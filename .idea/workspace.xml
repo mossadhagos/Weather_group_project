@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c2447739-1388-43a0-87f6-a3af3eb9c0a4" name="Changes" comment="" />
+    <list default="true" id="c2447739-1388-43a0-87f6-a3af3eb9c0a4" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/docs/mvp/docker_setup_guide.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/mvp/docker_setup_guide.md" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -45,12 +47,19 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;ai.playground.ignore.import.keys.banner.in.settings&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;anja/fastapi&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/anjag/Documents/github/data-plattformar/Weather_group_project&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;test__code&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/anjag/Documents/github/data-plattformar/Weather_group_project/docs/mvp/images&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\anjag\Documents\github\data-plattformar\Weather_group_project\docs\mvp\images" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -70,7 +79,15 @@
       <workItem from="1773129987322" duration="10660000" />
       <workItem from="1773209783016" duration="14209000" />
       <workItem from="1773234269122" duration="9381000" />
-      <workItem from="1773390788748" duration="7088000" />
+      <workItem from="1773390788748" duration="13310000" />
+      <workItem from="1773649764736" duration="16436000" />
+      <workItem from="1773807222134" duration="4837000" />
+      <workItem from="1773848298255" duration="2130000" />
+      <workItem from="1773905354187" duration="4206000" />
+      <workItem from="1773993908405" duration="12599000" />
+      <workItem from="1774252896057" duration="12985000" />
+      <workItem from="1774336699577" duration="5707000" />
+      <workItem from="1774426071556" duration="1054000" />
     </task>
     <servers />
   </component>

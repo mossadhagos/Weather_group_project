@@ -1,17 +1,36 @@
 services:
 
-  postgres:
-    image: postgres:18
+  postgres: 
+    image: postgres:17
     container_name: history_weather
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - postgres_data:/var/lib/postgresql
-    # Port to be able to use pgAdmin
+      - postgres_data:/var/lib/postgresql/data
+      - ./data:/data                    # local only, gitignored + TO BE REMOVED BEFORE COMMIT + SAME BELOW
+      - ./sql:/docker-entrypoint-initdb.d  # local only, gitignored - Postgres automatically runs any .sql file placed in that folder on startup
     ports:
-      -   "5432:5432"
+      -   "5433:5432"  # changed on 18 03 to chekc if query.py works/if not, change pas to 5432:5432
+    healthcheck:                                  # ← NEW: waits until Postgres accepts connections
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+  etl:
+    build: ./app                        # folder containing your script + Dockerfile
+    container_name: etl_runner
+    command: python weather_pipeline.py
+    env_file: .env
+    volumes:
+      - ./data:/app/data                # mounts mockup_data.csv + output folder
+    depends_on:
+      postgres:
+        condition: service_healthy      # ← waits for Postgres to be truly ready
+
 
   fastapi:  #app
     build: ./app
@@ -19,39 +38,27 @@ services:
       - "8000:8000"
     volumes:
       - ./app:/app
+      - ./data:/app/data
     env_file:
       - .env
     depends_on:
-      - postgres
-      - kafka
+      postgres:
+        condition: service_healthy
 
 
-  # This is already built in to kafka
-
-  #zookeeper:
-  #  image: confluentinc/cp-zookeeper:latest
-  #  environment:
-  #    ZOOKEEPER_CLIENT_PORT: 2181
-
-  kafka:
-    image: apache/kafka:latest
-    ports:
-      - "9092:9092"
-    #depends_on:
-     # - zookeeper
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    env_file: .env
     environment:
-      KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_BROKER_ID: 1
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
-      #KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      CLUSTER_ID: "fjewoEWMOwjo39vSDLD"
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    volumes:
-      - kafka_data:/var/lib/kafka/data
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 
 volumes:
   postgres_data:
-  kafka_data:
