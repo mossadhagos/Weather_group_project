@@ -16,7 +16,7 @@ This guide explains how to:
 2. **Create and run the container** (including the PostgreSQL database) with: <br>
 docker compose up
 
-<img src="images/image2.png" width=500>
+<img src="images/2.step.png" width=500>
 <br>
 <br>
 3. **Open an interactive terminal** (with -it) inside the container "history_weather": <br>
@@ -48,12 +48,12 @@ psql -U postgres -d history_weather
 
 <img src="images/7.step.png" width=500>
 <br>
-<br>
+<br> 
 => You can see 
 - the schemas by doing: \dn
 - the dbs by doing: \l
 
-<img src="images/schemas.png" width=500> 
+<img src="images/schemas.png" width=200> 
 <img src="images/dbs.png" width=500>
 <br>
 <br>
@@ -63,10 +63,10 @@ psql -U postgres -d history_weather
 <img src="images/8.step.png" width=500>
 <br>
 <br>
-9. **Run the SQL init script to create the schemas, tables and load** the data:<br>
-\i '/docker-entrypoint-initdb.d/init.sql'
+9. **Run the SQL ingest script to create the schemas, tables and load** the data:<br>
+\i '/docker-entrypoint-initdb.d/ingest.sql'
 
-<img src="images/bild_9.png" width=500>
+<img src="images/9.step.png" width=500>
 <br>
 <br>
 10. **Query the table** to check that the data was successfully ingested:<br>
